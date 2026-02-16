@@ -81,7 +81,7 @@ This project is organized into development phases for systematic implementation:
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Nehimi/myBlog.git
    cd Blog/backend
    ```
 
