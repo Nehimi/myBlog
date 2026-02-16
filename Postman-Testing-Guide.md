@@ -165,6 +165,33 @@ Copy this entire JSON and import into Postman:
       }
     },
     {
+      "name": "Get My Posts",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/blog/my?page=1&limit=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["blog", "my"],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "10"
+            }
+          ]
+        }
+      }
+    },
+    {
       "name": "Get Single Blog Post",
       "request": {
         "method": "GET",
