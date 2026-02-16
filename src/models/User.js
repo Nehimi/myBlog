@@ -76,9 +76,9 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
 };
 
 userSchema.methods.toJSON = function() {
-  const userObject = this.toObject();
-  delete userObject.password;
-  return userObject;
+  const userObject = this.toObject();//converts mongoose document to plain JavaScript object
+  delete userObject.password;//removes password from response
+  return userObject;//returns user object without password
 };
 
 module.exports = mongoose.model('User', userSchema);
