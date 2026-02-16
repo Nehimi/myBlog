@@ -391,16 +391,12 @@ CMD ["npm", "start"]
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🆘 Support
 
 For support and questions:
-- Create an issue in the GitHub repository
-- Check the API documentation above
-- Review the error responses for debugging
+- Create an issue in GitHub repository
+- Check API documentation above
+- Review error responses for debugging
 
 ## �️ Development Roadmap & Future Features
 
