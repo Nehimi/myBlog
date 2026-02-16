@@ -1,6 +1,16 @@
 const BlogPost = require('../models/BlogPost');
 const { validationResult } = require('express-validator');
 
+// Helper function to generate slug from title
+const generateSlug = (title) => {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9 -]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .trim();
+};
+
 const createBlogPost = async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -13,8 +23,18 @@ const createBlogPost = async (req, res) => {
 
     const { title, content, excerpt, category, tags, featuredImage, seo } = req.body;
 
+    // Generate slug from title
+    let slug = generateSlug(title);
+    
+    // Check if slug already exists and make it unique
+    const existingPost = await BlogPost.findOne({ slug });
+    if (existingPost) {
+      slug = `${slug}-${Date.now()}`;
+    }
+
     const blogPost = new BlogPost({
       title,
+      slug,
       content,
       excerpt,
       category,
