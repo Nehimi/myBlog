@@ -75,6 +75,11 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
+userSchema.methods.generateAuthToken = function() {
+  const generateToken = require('../utils/generateToken');
+  return generateToken({ id: this._id });
+};
+
 userSchema.methods.toJSON = function() {
   const userObject = this.toObject();//converts mongoose document to plain JavaScript object
   delete userObject.password;//removes password from response

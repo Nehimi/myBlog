@@ -1,3 +1,4 @@
+const multer = require('multer');
 const { cloudinary, uploadSingle, uploadMultiple } = require('../config/cloudinary');
 
 const uploadImage = async (req, res) => {

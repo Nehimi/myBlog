@@ -21,7 +21,7 @@ const createBlogPost = async (req, res) => {
       });
     }
 
-    const { title, content, excerpt, category, tags, featuredImage, seo } = req.body;
+    const { title, content, excerpt, category, tags, featuredImage, seo, status } = req.body;
 
     // Generate slug from title
     let slug = generateSlug(title);
@@ -41,6 +41,7 @@ const createBlogPost = async (req, res) => {
       tags: tags || [],
       featuredImage: featuredImage || '',
       author: req.user.id,
+      status: status || 'draft',
       seo: seo || {}
     });
 
@@ -220,7 +221,7 @@ const toggleLike = async (req, res) => {
     await blogPost.save();
 
     res.json({
-      message: likeIndex > -1 ? 'Like removed' : 'Like added',
+      message: likeIndex > -1 ? 'Post unliked successfully' : 'Post liked successfully',
       likesCount: blogPost.likes.length,
       isLiked: likeIndex === -1
     });
