@@ -9,15 +9,15 @@ const commentSchema = new mongoose.Schema({
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User',//reference to User model who created the comment
     required: true
   },
   blogPost: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'BlogPost',
+    ref: 'BlogPost',//reference to BlogPost model 
     required: true
   },
-  parent: {
+  parent: { //what it means user can comment on blog post or on comment
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Comment',
     default: null
@@ -68,22 +68,22 @@ commentSchema.post('save', async function() {
   }
 });
 
-commentSchema.post('remove', async function() {
+commentSchema.post('remove', async function() {//cascasing deletion of comments and replies
   await mongoose.model('BlogPost').findByIdAndUpdate(this.blogPost, {
     $inc: { commentsCount: -1 }
   });
   
-  if (this.parent) {
+  if (this.parent) {//if comment is a reply
     await this.constructor.findByIdAndUpdate(this.parent, {
       $pull: { replies: this._id }
     });
   }
   
-  await this.constructor.deleteMany({ parent: this._id });
+  await this.constructor.deleteMany({ parent: this._id });//delete all replies(children comments)
 });
 
-commentSchema.index({ blogPost: 1, createdAt: -1 });
-commentSchema.index({ author: 1 });
-commentSchema.index({ parent: 1 });
+commentSchema.index({ blogPost: 1, createdAt: -1 });//index for blog post and created at
+commentSchema.index({ author: 1 });//index for author why? because we want to show comments by author
+commentSchema.index({ parent: 1 });//index for parent why? because we want to show replies
 
 module.exports = mongoose.model('Comment', commentSchema);
