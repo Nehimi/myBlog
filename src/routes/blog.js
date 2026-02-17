@@ -40,7 +40,11 @@ const createBlogPostValidation = [
   body('featuredImage')
     .optional()
     .isURL()
-    .withMessage('Featured image must be a valid URL')
+    .withMessage('Featured image must be a valid URL'),
+  body('status')
+    .optional()
+    .isIn(['draft', 'published', 'archived'])
+    .withMessage('Status must be draft, published, or archived')
 ];
 
 const updateBlogPostValidation = [

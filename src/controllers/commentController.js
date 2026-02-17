@@ -184,7 +184,7 @@ const toggleCommentLike = async (req, res) => {
     await comment.save();
 
     res.json({
-      message: likeIndex > -1 ? 'Like removed' : 'Like added',
+      message: likeIndex > -1 ? 'Comment unliked successfully' : 'Comment liked successfully',
       likesCount: comment.likes.length,
       isLiked: likeIndex === -1
     });
@@ -201,6 +201,7 @@ const getMyComments = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const comments = await Comment.find({ author: req.user.id })
+      .populate('author', 'username firstName lastName avatar')
       .populate('blogPost', 'title slug')
       .populate('parent', 'content')
       .sort({ createdAt: -1 })
