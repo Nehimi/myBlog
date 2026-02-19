@@ -45,13 +45,13 @@ const commentSchema = new mongoose.Schema({
   timestamps: true
 });
 
-commentSchema.pre('save', async function(next) {
+commentSchema.pre('save', async function(next) {//update editedAt and isEdited
   if (this.isModified('content') && !this.isNew) {
     this.isEdited = true;
     this.editedAt = new Date();
   }
   
-  if (this.isNew && this.parent) {
+  if (this.isNew && this.parent) { //if comment is a reply
     await this.constructor.findByIdAndUpdate(this.parent, {
       $push: { replies: this._id }
     });
@@ -60,7 +60,7 @@ commentSchema.pre('save', async function(next) {
   next();
 });
 
-commentSchema.post('save', async function() {
+commentSchema.post('save', async function() {//increment comments count on blog post
   if (this.isNew) {
     await mongoose.model('BlogPost').findByIdAndUpdate(this.blogPost, {
       $inc: { commentsCount: 1 }
