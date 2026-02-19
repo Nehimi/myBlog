@@ -8,7 +8,8 @@ const {
   updateBlogPost,
   deleteBlogPost,
   toggleLike,
-  getMyBlogPosts
+  getMyBlogPosts,
+  getBlogPostsByYear
 } = require('../controllers/blogController');
 
 const router = express.Router();
@@ -80,6 +81,7 @@ const updateBlogPostValidation = [
 
 router.post('/', auth, createBlogPostValidation, createBlogPost);
 router.get('/', optionalAuth, getAllBlogPosts);
+router.get('/by-year', optionalAuth, getBlogPostsByYear);
 router.get('/my', auth, getMyBlogPosts);
 router.get('/:id', optionalAuth, getBlogPostById);
 router.put('/:id', auth, updateBlogPostValidation, updateBlogPost);

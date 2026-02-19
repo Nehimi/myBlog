@@ -266,6 +266,175 @@ const getMyBlogPosts = async (req, res) => {
   }
 };
 
+const getBlogPostsByYear = async (req, res) => {
+  try {
+    const { year } = req.query;
+    
+    // Set timeout for aggregation
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Aggregation timeout')), 8000);
+    });
+
+    // Build aggregation pipeline
+    let pipeline = [
+      {
+        $match: { status: 'published' }
+      },
+      {
+        $group: {
+          _id: { $year: '$publishedAt' },
+          posts: {
+            $push: {
+              _id: '$$ROOT._id',
+              title: '$title',
+              slug: '$slug',
+              excerpt: '$excerpt',
+              featuredImage: '$featuredImage',
+              category: '$category',
+              tags: '$tags',
+              status: '$status',
+              publishedAt: '$publishedAt',
+              readTime: '$readTime',
+              views: '$views',
+              likes: { $size: '$likes' },
+              commentsCount: '$commentsCount',
+              author: '$author'
+            }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { _id: -1 }
+      }
+    ];
+
+    // If specific year is requested, filter for that year
+    if (year) {
+      pipeline.unshift({
+        $match: { 
+          status: 'published',
+          $expr: { $eq: [{ $year: '$publishedAt' }, parseInt(year)] }
+        }
+      });
+    }
+
+    // Populate author information
+    pipeline.push({
+      $lookup: {
+        from: 'users',
+        localField: 'posts.author',
+        foreignField: '_id',
+        as: 'authorInfo'
+      }
+    });
+
+    pipeline.push({
+      $unwind: '$posts'
+    });
+
+    pipeline.push({
+      $lookup: {
+        from: 'users',
+        localField: 'posts.author',
+        foreignField: '_id',
+        as: 'authorData'
+      }
+    });
+
+    pipeline.push({
+      $unwind: '$authorData'
+    });
+
+    pipeline.push({
+      $group: {
+        _id: '$_id',
+        posts: {
+          $push: {
+            $mergeObjects: [
+              '$posts',
+              {
+                author: {
+                  _id: '$authorData._id',
+                  username: '$authorData.username',
+                  firstName: '$authorData.firstName',
+                  lastName: '$authorData.lastName',
+                  avatar: '$authorData.avatar'
+                }
+              }
+            ]
+          }
+        },
+        count: { $first: '$count' }
+      }
+    });
+
+    pipeline.push({
+      $sort: { _id: -1 }
+    });
+
+    // Try aggregation with timeout
+    const result = await Promise.race([
+      BlogPost.aggregate(pipeline),
+      timeoutPromise
+    ]);
+
+    // Format the response
+    const blogPostsByYear = result.map(yearGroup => {
+      // Extract posts and populate author properly
+      const posts = yearGroup.posts.map(post => ({
+        _id: post._id,
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt,
+        featuredImage: post.featuredImage,
+        category: post.category,
+        tags: post.tags,
+        status: post.status,
+        publishedAt: post.publishedAt,
+        readTime: post.readTime,
+        views: post.views,
+        likes: post.likes || [],
+        likesCount: post.likesCount || 0,
+        commentsCount: post.commentsCount || 0,
+        author: post.author
+      }));
+
+      return {
+        year: yearGroup._id,
+        posts,
+        count: yearGroup.count
+      };
+    });
+
+    res.json({
+      blogPostsByYear,
+      totalYears: blogPostsByYear.length,
+      totalPosts: blogPostsByYear.reduce((sum, year) => sum + year.count, 0)
+    });
+  } catch (error) {
+    console.error('Get blog posts by year error:', error);
+    
+    // Handle specific errors
+    if (error.message === 'Aggregation timeout') {
+      res.status(504).json({ 
+        message: 'Request timeout - please try again',
+        error: 'AGGREGATION_TIMEOUT'
+      });
+    } else if (error.name === 'MongoError') {
+      res.status(503).json({ 
+        message: 'Database temporarily unavailable',
+        error: 'DATABASE_ERROR'
+      });
+    } else {
+      res.status(500).json({ 
+        message: 'Server error fetching blog posts by year',
+        error: error.message 
+      });
+    }
+  }
+};
+
 module.exports = {
   createBlogPost,
   getAllBlogPosts,
@@ -273,5 +442,6 @@ module.exports = {
   updateBlogPost,
   deleteBlogPost,
   toggleLike,
-  getMyBlogPosts
+  getMyBlogPosts,
+  getBlogPostsByYear
 };
