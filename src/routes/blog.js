@@ -4,6 +4,7 @@ const { auth, optionalAuth } = require('../middleware/auth');
 const {
   createBlogPost,
   getAllBlogPosts,
+  getBlogPostBySlug,
   getBlogPostById,
   updateBlogPost,
   deleteBlogPost,
@@ -83,6 +84,7 @@ router.post('/', auth, createBlogPostValidation, createBlogPost);
 router.get('/', optionalAuth, getAllBlogPosts);
 router.get('/by-year', optionalAuth, getBlogPostsByYear);
 router.get('/my', auth, getMyBlogPosts);
+router.get('/slug/:slug', optionalAuth, getBlogPostBySlug);
 router.get('/:id', optionalAuth, getBlogPostById);
 router.put('/:id', auth, updateBlogPostValidation, updateBlogPost);
 router.delete('/:id', auth, deleteBlogPost);
