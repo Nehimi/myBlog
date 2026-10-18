@@ -57,13 +57,13 @@ const searchBlogPosts = async (req, res) => {
         sortOptions = { publishedAt: -1 };
         break;
       case 'oldest':
-        sortOptions = { publishedAt: 1 };
+        sortOptions = { publishedAt: 1 };//Ascending order
         break;
       case 'popular':
-        sortOptions = { views: -1 };
+        sortOptions = { views: -1 };//Descending order
         break;
       case 'most_liked':
-        sortOptions = { 'likes.length': -1 };
+        sortOptions = { 'likes.length': -1 };//Descending order
         break;
       case 'relevance':
       default:
@@ -77,9 +77,9 @@ const searchBlogPosts = async (req, res) => {
 
     const blogPosts = await BlogPost.find(searchQuery)
       .populate('author', 'username firstName lastName avatar')
-      .sort(sortOptions)
-      .skip(skip)
-      .limit(limitNum)
+      .sort(sortOptions)//Sorting
+      .skip(skip)//Pagination
+      .limit(limitNum)//Pagination
       .select('-content');
 
     const total = await BlogPost.countDocuments(searchQuery);

@@ -109,6 +109,30 @@ const getAllBlogPosts = async (req, res) => {
   }
 };
 
+const getBlogPostBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    
+    const blogPost = await BlogPost.findOne({ slug, status: 'published' })
+      .populate('author', 'username firstName lastName avatar bio');
+
+    if (!blogPost) {
+      return res.status(404).json({ message: 'Blog post not found' });
+    }
+
+    // Increment view count
+    await BlogPost.findOneAndUpdate(
+      { slug }, 
+      { $inc: { views: 1 } }
+    );
+
+    res.json({ blogPost });
+  } catch (error) {
+    console.error('Get blog post by slug error:', error);
+    res.status(500).json({ message: 'Server error fetching blog post' });
+  }
+};
+
 const getBlogPostById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -438,6 +462,7 @@ const getBlogPostsByYear = async (req, res) => {
 module.exports = {
   createBlogPost,
   getAllBlogPosts,
+  getBlogPostBySlug,
   getBlogPostById,
   updateBlogPost,
   deleteBlogPost,

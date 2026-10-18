@@ -6,6 +6,7 @@ const {
   getPopularSearches
 } = require('../controllers/searchController');
 
+
 const router = express.Router();
 
 router.get('/posts', optionalAuth, searchBlogPosts);
