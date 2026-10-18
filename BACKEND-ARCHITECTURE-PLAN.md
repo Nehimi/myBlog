@@ -134,7 +134,7 @@ backend/
 
 ### **Implemented**
 - ✅ **Password Hashing** - bcrypt
-- ✅ **JWT Authentication** - Secure token-based auth
+- ✅ **JWT Authentication** - Secure token-based auth and this is modern to compare with session based authentication
 - ✅ **Input Validation** - express-validator
 - ✅ **Rate Limiting** - Prevent abuse
 - ✅ **CORS** - Cross-origin requests

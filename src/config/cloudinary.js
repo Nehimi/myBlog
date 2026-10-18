@@ -1,6 +1,6 @@
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const multer = require('multer');
+const multer = require('multer');//middleware for handling multipart/form-data
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -11,9 +11,9 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'blog_images',
+    folder: 'blog_images', //Organizes images in cloud folder
     allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-    public_id: (req, file) => {
+    public_id: (req, file) => { //Generates unique ID for each image
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
       return `blog_${uniqueSuffix}`;
     }
@@ -21,11 +21,16 @@ const storage = new CloudinaryStorage({
 });
 
 const upload = multer({
+  //middleware configuration
+  // Enforces file size limits (5MB max)
+  // Validates file types before upload
   storage: storage,
   limits: {
     fileSize: 5 * 1024 * 1024 // 5MB limit
   },
+
   fileFilter: (req, file, cb) => {
+    //middleware to validate file types
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
@@ -35,9 +40,9 @@ const upload = multer({
   }
 });
 
-const uploadMultiple = upload.array('images', 5);
+const uploadMultiple = upload.array('images', 5); //middleware to upload multiple images (max 5)
 
-const uploadSingle = upload.single('image');
+const uploadSingle = upload.single('image'); //middleware to upload single image
 
 module.exports = {
   cloudinary,

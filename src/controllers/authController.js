@@ -83,7 +83,7 @@ const login = async (req, res) => {
     user.lastLogin = new Date();
     await user.save();
 
-    const token = generateToken({ id: user._id });
+    const token = generateToken({ id: user._id });//id is payload
 
     res.json({
       message: 'Login successful',

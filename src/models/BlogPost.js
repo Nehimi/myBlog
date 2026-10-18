@@ -82,17 +82,17 @@ const blogPostSchema = new mongoose.Schema({
   timestamps: true
 });
 
-blogPostSchema.pre('save', function(next) {
+blogPostSchema.pre('save', function(next) {//middleware to generate slug and set publishedAt
   if (this.isModified('title') && !this.slug) {
     this.slug = this.title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '') + '-' + Date.now();
+      .replace(/(^-|-$)/g, '') + '-' + Date.now();//generates unique slug example: title-123456789
   }
   
   if (this.isModified('status') && this.status === 'published' && !this.publishedAt) {
     this.publishedAt = new Date();
-    this.isPublished = true;
+    this.isPublished = true;//sets published status
   }
   
   if (this.content && !this.readTime) {
@@ -104,11 +104,11 @@ blogPostSchema.pre('save', function(next) {
   next();
 });
 
-blogPostSchema.index({ title: 'text', content: 'text' });
-blogPostSchema.index({ author: 1, status: 1 });
-blogPostSchema.index({ category: 1, status: 1 });
-blogPostSchema.index({ tags: 1 });
-blogPostSchema.index({ publishedAt: -1 });
-blogPostSchema.index({ views: -1 });
+blogPostSchema.index({ title: 'text', content: 'text' });//text index for full-text search
+blogPostSchema.index({ author: 1, status: 1 });//compound index for author and status
+blogPostSchema.index({ category: 1, status: 1 });//compound index for category and status
+blogPostSchema.index({ tags: 1 });//index for tags
+blogPostSchema.index({ publishedAt: -1 });//index for published date (descending) why descending? because we want to show the most recent posts first
+blogPostSchema.index({ views: -1 });//index for views (descending) why descending? because we want to show the most viewed posts first
 
 module.exports = mongoose.model('BlogPost', blogPostSchema);
