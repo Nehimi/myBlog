@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const commentSchema = new mongoose.Schema({
   content: {
@@ -86,4 +86,4 @@ commentSchema.index({ blogPost: 1, createdAt: -1 });//index for blog post and cr
 commentSchema.index({ author: 1 });//index for author why? because we want to show comments by author
 commentSchema.index({ parent: 1 });//index for parent why? because we want to show replies
 
-module.exports = mongoose.model('Comment', commentSchema);
+export default mongoose.model('Comment', commentSchema);

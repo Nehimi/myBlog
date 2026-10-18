@@ -1,6 +1,6 @@
-const Comment = require('../models/Comment');
-const BlogPost = require('../models/BlogPost');
-const { validationResult } = require('express-validator');
+import Comment from '../models/Comment.js';
+import BlogPost from '../models/BlogPost.js';
+import { validationResult } from 'express-validator';
 
 const createComment = async (req, res) => {
   try {
@@ -225,7 +225,7 @@ const getMyComments = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   createComment,
   getCommentsByBlogPost,
   updateComment,

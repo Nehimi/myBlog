@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
+import generateToken from '../utils/generateToken.js';
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -76,7 +77,6 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
 };
 
 userSchema.methods.generateAuthToken = function() {
-  const generateToken = require('../utils/generateToken');
   return generateToken({ id: this._id });
 };
 
@@ -86,4 +86,4 @@ userSchema.methods.toJSON = function() {
   return userObject;//returns user object without password
 };
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

@@ -1,7 +1,7 @@
-const express = require('express');
-const { body } = require('express-validator');
-const { auth, optionalAuth } = require('../middleware/auth');
-const {
+import express from 'express';
+import { body } from 'express-validator';
+import { auth, optionalAuth } from '../middleware/auth.js';
+import {
   createBlogPost,
   getAllBlogPosts,
   getBlogPostBySlug,
@@ -11,7 +11,7 @@ const {
   toggleLike,
   getMyBlogPosts,
   getBlogPostsByYear
-} = require('../controllers/blogController');
+} from '../controllers/blogController.js';
 
 const router = express.Router();
 
@@ -90,4 +90,4 @@ router.put('/:id', auth, updateBlogPostValidation, updateBlogPost);
 router.delete('/:id', auth, deleteBlogPost);
 router.post('/:id/like', auth, toggleLike);
 
-module.exports = router;
+export default router;

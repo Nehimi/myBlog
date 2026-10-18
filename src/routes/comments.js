@@ -1,14 +1,14 @@
-const express = require('express');
-const { body } = require('express-validator');
-const { auth } = require('../middleware/auth');
-const {
+import express from 'express';
+import { body } from 'express-validator';
+import { auth } from '../middleware/auth.js';
+import {
   createComment,
   getCommentsByBlogPost,
   updateComment,
   deleteComment,
   toggleCommentLike,
   getMyComments
-} = require('../controllers/commentController');
+} from '../controllers/commentController.js';
 
 const router = express.Router();
 
@@ -46,4 +46,4 @@ router.put('/:id', auth, updateCommentValidation, updateComment);
 router.delete('/:id', auth, deleteComment);
 router.post('/:id/like', auth, toggleCommentLike);
 
-module.exports = router;
+export default router;

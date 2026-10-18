@@ -1,6 +1,9 @@
-const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const multer = require('multer');//middleware for handling multipart/form-data
+import cloudinaryPackage from 'cloudinary';
+import cloudinaryStoragePackage from 'multer-storage-cloudinary';
+import multer from 'multer';//middleware for handling multipart/form-data
+
+const { v2: cloudinary } = cloudinaryPackage;
+const { CloudinaryStorage } = cloudinaryStoragePackage;
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -44,7 +47,7 @@ const uploadMultiple = upload.array('images', 5); //middleware to upload multipl
 
 const uploadSingle = upload.single('image'); //middleware to upload single image
 
-module.exports = {
+export {
   cloudinary,
   uploadSingle,
   uploadMultiple

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const blogPostSchema = new mongoose.Schema({
   title: {
@@ -111,4 +111,4 @@ blogPostSchema.index({ tags: 1 });//index for tags
 blogPostSchema.index({ publishedAt: -1 });//index for published date (descending) why descending? because we want to show the most recent posts first
 blogPostSchema.index({ views: -1 });//index for views (descending) why descending? because we want to show the most viewed posts first
 
-module.exports = mongoose.model('BlogPost', blogPostSchema);
+export default mongoose.model('BlogPost', blogPostSchema);

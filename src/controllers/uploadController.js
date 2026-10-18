@@ -1,5 +1,5 @@
-const multer = require('multer');
-const { cloudinary, uploadSingle, uploadMultiple } = require('../config/cloudinary');
+import multer from 'multer';
+import { cloudinary, uploadSingle, uploadMultiple } from '../config/cloudinary.js';
 
 const uploadImage = async (req, res) => {
   try {
@@ -93,7 +93,7 @@ const deleteImage = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   uploadImage,
   uploadMultipleImages,
   deleteImage

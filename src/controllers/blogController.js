@@ -1,5 +1,5 @@
-const BlogPost = require('../models/BlogPost');
-const { validationResult } = require('express-validator');
+import BlogPost from '../models/BlogPost.js';
+import { validationResult } from 'express-validator';
 
 // Helper function to generate slug from title
 const generateSlug = (title) => {
@@ -459,7 +459,7 @@ const getBlogPostsByYear = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   createBlogPost,
   getAllBlogPosts,
   getBlogPostBySlug,

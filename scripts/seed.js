@@ -1,8 +1,8 @@
-require('dotenv').config();
-const mongoose = require('mongoose');
-const User = require('../src/models/User');
-const BlogPost = require('../src/models/BlogPost');
-const connectDB = require('../src/config/database');
+import 'dotenv/config';
+import mongoose from 'mongoose';
+import User from '../src/models/User.js';
+import BlogPost from '../src/models/BlogPost.js';
+import connectDB from '../src/config/database.js';
 
 const seedData = async () => {
   try {

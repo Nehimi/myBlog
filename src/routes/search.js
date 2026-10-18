@@ -1,10 +1,10 @@
-const express = require('express');
-const { optionalAuth } = require('../middleware/auth');
-const {
+import express from 'express';
+import { optionalAuth } from '../middleware/auth.js';
+import {
   searchBlogPosts,
   getSearchSuggestions,
   getPopularSearches
-} = require('../controllers/searchController');
+} from '../controllers/searchController.js';
 
 
 const router = express.Router();
@@ -13,4 +13,4 @@ router.get('/posts', optionalAuth, searchBlogPosts);
 router.get('/suggestions', getSearchSuggestions);
 router.get('/popular', getPopularSearches);
 
-module.exports = router;
+export default router;

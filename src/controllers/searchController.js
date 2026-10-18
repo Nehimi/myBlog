@@ -1,5 +1,5 @@
-const BlogPost = require('../models/BlogPost');
-const User = require('../models/User');
+import BlogPost from '../models/BlogPost.js';
+import User from '../models/User.js';
 
 const searchBlogPosts = async (req, res) => {
   try {
@@ -199,7 +199,7 @@ const getPopularSearches = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   searchBlogPosts,
   getSearchSuggestions,
   getPopularSearches

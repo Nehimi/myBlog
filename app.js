@@ -1,15 +1,15 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const morgan = require('morgan');
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import morgan from 'morgan';
 
-const authRoutes = require('./src/routes/auth');
-const blogRoutes = require('./src/routes/blog');
-const commentRoutes = require('./src/routes/comments');
-const uploadRoutes = require('./src/routes/upload');
-const searchRoutes = require('./src/routes/search');
+import authRoutes from './src/routes/auth.js';
+import blogRoutes from './src/routes/blog.js';
+import commentRoutes from './src/routes/comments.js';
+import uploadRoutes from './src/routes/upload.js';
+import searchRoutes from './src/routes/search.js';
 
 const app = express();
 
@@ -44,7 +44,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'OK', 
-    message: 'Blog Backend API is running',
+    message: 'Blog Backend API is running ...',
     timestamp: new Date().toISOString()
   });
 });
@@ -90,4 +90,4 @@ app.use((error, req, res, next) => {
   });
 });
 
-module.exports = app;
+export default app;
